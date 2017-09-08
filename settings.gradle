@@ -1,0 +1,2 @@
+include ':accessibility-test-framework'
+project(':accessibility-test-framework').projectDir = new File('lib/accessibility/test/framework')

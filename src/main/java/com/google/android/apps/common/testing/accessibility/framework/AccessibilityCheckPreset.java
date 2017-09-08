@@ -34,6 +34,9 @@ public enum AccessibilityCheckPreset {
   /** The set of checks available in the 2.0 release of the framework */
   VERSION_2_0_CHECKS,
 
+  /** The set of checks available in the 3.0 release of the framework */
+  VERSION_3_0_CHECKS,
+
   /** Don't check anything */
   NO_CHECKS,
 
@@ -67,7 +70,9 @@ public enum AccessibilityCheckPreset {
     checks.add(new TextContrastViewCheck());
     checks.add(new DuplicateSpeakableTextViewHierarchyCheck());
     checks.add(new SpeakableTextPresentViewCheck());
-    checks.add(new EditableContentDescViewCheck());
+    if (preset.ordinal() < VERSION_3_0_CHECKS.ordinal())
+        checks.add(new EditableContentDescViewCheck());
+
     if (preset == VERSION_1_0_CHECKS) {
       return checks;
     }
@@ -76,6 +81,19 @@ public enum AccessibilityCheckPreset {
     checks.add(new RedundantContentDescViewCheck());
     checks.add(new DuplicateClickableBoundsViewCheck());
     if (preset == VERSION_2_0_CHECKS) {
+      return checks;
+    }
+
+    checks.add(new OrangeAbbreviationTextContentDescViewCheck());
+    checks.add(new OrangeControlsViewCheck());
+    checks.add(new OrangeEditableContentDescViewCheck());
+    //checks.add(new OrangeImageContentDescViewCheck());
+    checks.add(new OrangeListViewCheck());
+    checks.add(new OrangeSizeTextContentDescViewCheck());
+    checks.add(new OrangeTitleViewCheck());
+    checks.add(new OrangeWebViewCheck());
+
+    if (preset == VERSION_3_0_CHECKS) {
       return checks;
     }
 

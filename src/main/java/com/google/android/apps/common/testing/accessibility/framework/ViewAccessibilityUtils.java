@@ -15,8 +15,14 @@
 package com.google.android.apps.common.testing.accessibility.framework;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.graphics.Rect;
 import android.os.Build;
+import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
 import android.text.TextUtils;
 import android.view.View;
@@ -29,7 +35,9 @@ import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -421,13 +429,55 @@ final class ViewAccessibilityUtils {
    * @param view The {@link View} to evaluate
    * @return {@code true} if {@code view} has a contentDescription or text.
    */
-  private static boolean hasText(View view) {
+  public static boolean hasText(View view) {
     if (!TextUtils.isEmpty(view.getContentDescription())) {
       return true;
     } else if (view instanceof TextView) {
       return !TextUtils.isEmpty(((TextView) view).getText());
+    } else if (view instanceof Spinner) {
+      return !TextUtils.isEmpty(((Spinner) view).getPrompt());
     }
-
     return false;
+  }
+
+  /**
+   *
+   * @param view
+   * @return
+   */
+  @Nullable
+  public static Activity tryGetActivity(View view) {
+    Context context = view.getContext();
+    while (context != null) {
+      if (context instanceof Activity) {
+        return (Activity) context;
+      } else if (context instanceof ContextWrapper) {
+        context = ((ContextWrapper) context).getBaseContext();
+      } else {
+        return null;
+      }
+    }
+    return null;
+  }
+
+  /**
+   *
+   * @param activity
+   * @return
+   */
+  @TargetApi(26)
+  public static List<Fragment> getVisibleFragments(Activity activity) {
+    List<Fragment>  visibleFragments = new ArrayList<>();
+    if(activity!=null) {
+      FragmentManager fragmentManager  = activity.getFragmentManager();
+      List<Fragment>  fragments        = fragmentManager.getFragments();
+      if (fragments != null) {
+        for (Fragment fragment : fragments) {
+          if (fragment != null && fragment.isVisible())
+            visibleFragments.add(fragment);
+        }
+      }
+    }
+    return visibleFragments;
   }
 }

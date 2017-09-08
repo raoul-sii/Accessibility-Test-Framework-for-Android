@@ -124,7 +124,7 @@ public final class AccessibilityValidator {
   }
 
   /**
-   * Adds a listener to receive all {@link AccessibilityCheckResult}s after suppression. Listeners
+   * Adds a listener to receive all {@link AccessibilityViewCheckResult}s after suppression. Listeners
    * will be called in the order they are added and before any
    * {@link AccessibilityViewCheckException} would be thrown.
    *
